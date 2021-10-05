@@ -1,0 +1,76 @@
+---
+title: "Mini Data Analysis"
+author: "William Laplante"
+date: "05/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, warning=FALSE,message=FALSE}
+library(datateachr)
+library(tidyverse)
+library(knitr)
+library(DT)
+```
+
+## Task 1 : Choosing favorite dataset
+
+Out of the 7 datasets, we pick the following:<br>
+1 : apt_buildings<br>
+2 : cancer_sample<br>
+3 : flow_sample<br>
+4 : vancouver_trees<br>
+
+Now, we explore these datasets to find out which one we would like to analyze. We look at different attributes of the data, such as the dimensions of the datasets, the variables and their datatypes, and the basic statistics describing our data.<br>
+
+#### Exploring the data
+
+
+##### Variables, data types and dimensions
+```{r}
+glimpse(cancer_sample, fillContainer = T)
+```
+
+```{r}
+glimpse(apt_buildings)
+```
+
+```{r}
+glimpse(flow_sample)
+```
+
+```{r}
+glimpse(vancouver_trees)
+```
+
+##### Basic statistics
+
+```{r}
+summary(cancer_sample)
+```
+
+```{r}
+summary(apt_buildings)
+```
+
+```{r}
+summary(flow_sample)
+```
+
+```{r}
+summary(vancouver_trees)
+```
+
+For our analysis, we decide to use the cancer_sample and the vancouver_trees datasets. These datasets were picked because they fall under the biostatistics field, and thus they fit my interests.<br>
+
+We then choose 1 research question that we would like to answer with each dataaset : <br>
+cancer_sample : How does the area of a cancer tumor affects the diagnosis? <br>
+vancouver_trees : How does the geographic position of a tree affects the volume of a tree, by species ?<br>
+apt_buildings : Which variable in the dataset is most affected by the year a building was built affects other variables in the dataset?<br>
+flow_sample : Is the flow variable a periodic quantity?<br>
+
+## Task 2 : Exploring dataset

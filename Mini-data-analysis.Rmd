@@ -2,7 +2,7 @@
 title: "Mini Data Analysis"
 author: "William Laplante"
 date: "05/10/2021"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}

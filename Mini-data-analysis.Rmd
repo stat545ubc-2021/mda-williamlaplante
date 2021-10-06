@@ -70,7 +70,29 @@ For our analysis, we decide to use the cancer_sample and the vancouver_trees dat
 We then choose 1 research question that we would like to answer with each dataaset : <br>
 cancer_sample : How does the area of a cancer tumor affects the diagnosis? <br>
 vancouver_trees : How does the geographic position of a tree affects the volume of a tree, by species ?<br>
-apt_buildings : Which variable in the dataset is most affected by the year a building was built affects other variables in the dataset?<br>
-flow_sample : Is the flow variable a periodic quantity?<br>
+
+From these questions, the vancouver_trees one seems the most interesting one. Hence we choose the vancouver_trees dataset for our analysis.
 
 ## Task 2 : Exploring dataset
+
+1) We plot the distribution of tree diameter.
+```{r}
+ggplot(vancouver_trees, aes(x=diameter)) + geom_histogram()
+```
+
+2) We create a new variable called vol_estimate, which has the goal to estimate the volume of each tree. We assume a cylindral shape for our estimate. Thus, the formula should be:
+$$
+V = \pi (\frac{D}{2})^{2} \times H,
+$$
+where $D$ and $H$ are the tree's diameter and height respectively. Since the variable height_range_id is following a convention such that the value is of 0-10 for every 10 feet, we first add 1 to each value and multiply by 10. This will give us our height column for the volume calculation.
+
+
+```{r}
+transmute(vancouver_trees, vol_estimate = 10*(height_range_id+1) * pi * (diameter/2)^2)
+```
+
+```{r}
+datatable(head(vancouver_trees))
+```
+
+

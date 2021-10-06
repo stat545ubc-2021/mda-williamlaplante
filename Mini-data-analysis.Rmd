@@ -71,28 +71,39 @@ We then choose 1 research question that we would like to answer with each dataas
 cancer_sample : How does the area of a cancer tumor affects the diagnosis? <br>
 vancouver_trees : How does the geographic position of a tree affects the volume of a tree, by species ?<br>
 
-From these questions, the vancouver_trees one seems the most interesting one. Hence we choose the vancouver_trees dataset for our analysis.
+From these questions, the cancer_sample one is the most interesting one. Hence we choose the cancer_sample dataset for our analysis.
 
 ## Task 2 : Exploring dataset
 
-1) We plot the distribution of tree diameter.
+1) We plot the distribution of tumor area by diagnosis, where B means benign and M means malignant. The reason we do this is to observe if the area of a malignant cancer tends to be bigger in comparison with a benign cancer. 
 ```{r}
-ggplot(vancouver_trees, aes(x=diameter)) + geom_histogram()
+ggplot(cancer_sample, aes(x=area_mean)) + geom_histogram(aes(color = diagnosis))
 ```
 
-2) We create a new variable called vol_estimate, which has the goal to estimate the volume of each tree. We assume a cylindral shape for our estimate. Thus, the formula should be:
-$$
-V = \pi (\frac{D}{2})^{2} \times H,
-$$
-where $D$ and $H$ are the tree's diameter and height respectively. Since the variable height_range_id is following a convention such that the value is of 0-10 for every 10 feet, we first add 1 to each value and multiply by 10. This will give us our height column for the volume calculation.
-
-
+2) We explore the relation between smoothness and compactness by type of diagnosis. We do this to explore if smoothness (local variation in radius lengths) is correlated to compactness (perimeter² / area — 1.0).
 ```{r}
-transmute(vancouver_trees, vol_estimate = 10*(height_range_id+1) * pi * (diameter/2)^2)
+ggplot(cancer_sample, aes(x=smoothness_mean, y=compactness_mean)) + geom_point(aes(color=diagnosis))
+```
+  
+We do a boxplot of concavity by diagnosis. This is to explore whether the median concavity is bigger for malignant cancers compared to benign cancers. 
+```{r}
+ggplot(cancer_sample, aes(x=diagnosis, y=concavity_mean)) + 
+    geom_boxplot()
 ```
 
+We look at the density plot of cancer symmetry by diagnosis. This will help us explore whether benign cancers have more symmetry than malignant cancer.
 ```{r}
-datatable(head(vancouver_trees))
+ggplot(cancer_sample, aes(symmetry_mean)) +
+    geom_density(aes(color=diagnosis))
 ```
+
+## Task 3 : Research questions
+
+We now establish 4 research questions based on our exploration of the data.
+
+1) How does the area of a cancer affects the diagnosis?
+2) How strongly do smoothness and compactness correlate, and is it dependent on diagnosis?
+3) What is the variable in this dataset that is the best indicator of a malignant cancer?
+4) Is it harder to perform radius measurements on malignant cancers compared to benign cancers? That is, is the standard error in radius measurements bigger for malignant cancers?
 
 

@@ -79,3 +79,9 @@ Now, we make a plot illustrating the correlation between the two variables. We a
 ggplot(cancer_sample, aes(smoothness_mean, compactness_mean)) + geom_point() + geom_smooth(method=lm)
 ```
 
+#### Research question 3
+
+
+
+
+

@@ -165,3 +165,5 @@ ggplot(cancer_sample, aes(smoothness_mean, compactness_mean)) + geom_point() + g
     ## `geom_smooth()` using formula 'y ~ x'
 
 ![](Mini-data-analysis-m2_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+#### Research question 3

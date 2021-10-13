@@ -104,7 +104,31 @@ Here, the graph shows the number of variables falling under each category for th
 ggplot(category_corr, aes(x=category)) + geom_bar()
 ```
 
+#### Research question 4
 
-What is the variable in this dataset that is the best indicator of a malignant cancer?
+For this research question, we can create a new variable, which would be the absolute difference between the mean and the worst measurement for each diagnosis. If the worst is far from the mean, it tells us that there is a high variance between measurements of the same variable. 
+
+```{r}
+data_mean <- cancer_sample %>% select(radius_mean : fractal_dimension_mean) 
+
+data_worse <- cancer_sample %>% select(radius_worst : fractal_dimension_worst)
+
+radius_diff = rename_with(abs(data_mean-data_worse), ~gsub("_mean", "_diff", .x, fixed=TRUE)) %>% select(radius_diff)
+head(radius_diff)
+```
+We can then compute some statistics to see how variable radius measurements are :
+```{r}
+summary(radius_diff$radius_diff)
+```
+```{r}
+summary(data_mean$radius_mean)
+```
+
+Doing so gives us input on the range of radius measurements, i.e. how precise the given values for radius_mean are.We can visualize this by using a boxplot :
+
+```{r}
+radius_df = data.frame(cancer_sample$radius_mean, radius_diff)
+ggplot(stack(radius_df), aes(x=ind, y=values)) + geom_boxplot()
+```
 
 

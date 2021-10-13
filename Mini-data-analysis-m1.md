@@ -395,7 +395,7 @@ ggplot(cancer_sample, aes(x=area_mean)) + geom_histogram(aes(color = diagnosis))
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](Mini-data-analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Mini-data-analysis-m1_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 2.  We explore the relation between smoothness and compactness by type
     of diagnosis. We do this to explore if smoothness (local variation
@@ -406,7 +406,7 @@ ggplot(cancer_sample, aes(x=area_mean)) + geom_histogram(aes(color = diagnosis))
 ggplot(cancer_sample, aes(x=smoothness_mean, y=compactness_mean)) + geom_point(aes(color=diagnosis))
 ```
 
-![](Mini-data-analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](Mini-data-analysis-m1_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 We do a boxplot of concavity by diagnosis. This is to explore whether
 the median concavity is bigger for malignant cancers compared to benign
@@ -417,7 +417,7 @@ ggplot(cancer_sample, aes(x=diagnosis, y=concavity_mean)) +
     geom_boxplot()
 ```
 
-![](Mini-data-analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](Mini-data-analysis-m1_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 We look at the density plot of cancer symmetry by diagnosis. This will
 help us explore whether benign cancers have more symmetry than malignant
@@ -428,7 +428,7 @@ ggplot(cancer_sample, aes(symmetry_mean)) +
     geom_density(aes(color=diagnosis))
 ```
 
-![](Mini-data-analysis_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](Mini-data-analysis-m1_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ## Task 3 : Research questions
 

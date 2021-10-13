@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(datateachr)
 library(plyr)
 library(tidyverse)
+library(DiscriMiner)
+library(corrr)
 ```
 
 ## Task 1 : Process and summarize your data
@@ -81,7 +83,28 @@ ggplot(cancer_sample, aes(smoothness_mean, compactness_mean)) + geom_point() + g
 
 #### Research question 3
 
+We look at the correlation between all numerical variables in the dataset and the diagnosis categorical variable. To do so, we convert the diagnosis column to a numerical datatype, so that malignant ("M") becomes 1 and benign ("B") becomes 0. This makes it so we can compute the correlation matrix.
+```{r}
+cancer_sample_numeric <- cancer_sample %>% replace(cancer_sample=="M","1") %>% replace(cancer_sample=="B","0") %>% transform(diagnosis=as.numeric(diagnosis))
+cancer_sample_cormatrix = cor(cancer_sample_numeric)
+```
+
+```{r}
+cormatrix_df <- as_cordf(cancer_sample_cormatrix)
+cormatrix_df
+```
+We can then split the correlation coefficients into 3 categories : High, Medium and Low. This allows us to understand the influence of the existing variables on the cancer diagnosis. We illustrate this splitting using a bar graph.
+```{r}
+
+category_corr <- cormatrix_df %>% mutate(category=cut(diagnosis, breaks=c(-Inf,0.33, 0.66, Inf), labels=c("Low", "Medium", "High"))) %>% select(term, diagnosis, category) %>% filter(!is.na(diagnosis)) %>% rename(variable=term, corr_with_diagnosis=diagnosis)
+category_corr
+```
+Here, the graph shows the number of variables falling under each category for the correlation coefficient with the cancer diagnosis.
+```{r}
+ggplot(category_corr, aes(x=category)) + geom_bar()
+```
 
 
+What is the variable in this dataset that is the best indicator of a malignant cancer?
 
 

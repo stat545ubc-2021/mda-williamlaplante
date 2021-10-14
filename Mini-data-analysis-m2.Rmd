@@ -131,4 +131,50 @@ radius_df = data.frame(cancer_sample$radius_mean, radius_diff)
 ggplot(stack(radius_df), aes(x=ind, y=values)) + geom_boxplot()
 ```
 
+### 1.3 : Progress on research questions
+
+All of my research questions have been explored enough for me to have an intuitive answer. In other words, I reached a point where I could argue and defend my answers, but only using graphs and basic arguments. The next step will be to solidify my position regarding the research questions using statistical tools in hypothesis testing. For instance, in my first research question, it is clear that the distribution of cancer area for malignant and benign diagnosis are different. But, to claim there is a significant enough difference between the two distribution, I need some sort of hypothesis testing. The same applies for the other research questions. Also, for the last research questions, I realized that it would be possible to extend the question to more than just the radius. This would provide insights on which variables are the easiest to measure. For me, the third research question is the one yielding the most interesting results, since it provides insights on which variables are the best to predict the diagnosis of a cancer. Having an answer to this research question is certainly very useful for modern medecine.
+
+
+## Task 2 : Tidy your data
+
+### Task 2.1
+
+We select 2 columns of mean, se and worst along with the diagnosis column. This gives us a subset of the data to analyze which, structurally speaking, represents the whole dataset. We see that this data is not exactly tidy, since some columns are different statistics (mean, standard deviation, worst) of the same measurement (radius, texture). This is actually the "wide" version of our data. 
+```{r}
+data_subset <- select(cancer_sample, diagnosis:texture_mean, radius_se:texture_se, radius_worst:texture_worst)
+data_subset
+```
+
+### Task 2.2
+
+To make our data tidy, we make it "long" so that every column is a variable, every row is an observation, and every cell is a single value.
+```{r}
+data_subset %>% pivot_longer(!diagnosis, names_to=c("Measurement", "Statistic"), names_sep="_", values_to = "Value")
+```
+### Task 2.3
+The most interesting research questions for me are the first one and the third one because they complement well themselves, and because in theory, providing an answer to these problems would be beneficial for cancer predictions. Hence, we pick those for milestone 3. The version of the data we pick is as follows, where we perform some operations on the dataset for later usage.
+
+For research question 1, we have the area_mean for both diagnosis:
+```{r}
+area_mean_M = cancer_sample %>% filter(diagnosis == "M") %>% select(area_mean)
+```
+```{r}
+area_mean_B = cancer_sample %>% filter(diagnosis == "B") %>% select(area_mean)
+```
+
+For research question 2 (we already performed the operations above), we have 3 versions of the data we will use.
+
+This is the data with M mapped to 1 and B mapped to 0.
+```{r}
+head(cancer_sample_numeric)
+```
+This is the correlation matrix of the cancer_sample_numeric data.
+```{r}
+head(cormatrix_df)
+```
+This is the categorized version of the cormatrix_df data for the diagnosis column. 
+```{r}
+head(category_corr)
+```
 

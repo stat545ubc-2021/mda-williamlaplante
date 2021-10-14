@@ -295,3 +295,196 @@ ggplot(stack(radius_df), aes(x=ind, y=values)) + geom_boxplot()
 ```
 
 ![](Mini-data-analysis-m2_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+### 1.3 : Progress on research questions
+
+All of my research questions have been explored enough for me to have an
+intuitive answer. In other words, I reached a point where I could argue
+and defend my answers, but only using graphs and basic arguments. The
+next step will be to solidify my position regarding the research
+questions using statistical tools in hypothesis testing. For instance,
+in my first research question, it is clear that the distribution of
+cancer area for malignant and benign diagnosis are different. But, to
+claim there is a significant enough difference between the two
+distribution, I need some sort of hypothesis testing. The same applies
+for the other research questions. Also, for the last research questions,
+I realized that it would be possible to extend the question to more than
+just the radius. This would provide insights on which variables are the
+easiest to measure. For me, the third research question is the one
+yielding the most interesting results, since it provides insights on
+which variables are the best to predict the diagnosis of a cancer.
+Having an answer to this research question is certainly very useful for
+modern medecine.
+
+## Task 2 : Tidy your data
+
+### Task 2.1
+
+We select 2 columns of mean, se and worst along with the diagnosis
+column. This gives us a subset of the data to analyze which,
+structurally speaking, represents the whole dataset. We see that this
+data is not exactly tidy, since some columns are different statistics
+(mean, standard deviation, worst) of the same measurement (radius,
+texture). This is actually the “wide” version of our data.
+
+``` r
+data_subset <- select(cancer_sample, diagnosis:texture_mean, radius_se:texture_se, radius_worst:texture_worst)
+data_subset
+```
+
+    ## # A tibble: 569 × 7
+    ##    diagnosis radius_mean texture_mean radius_se texture_se radius_worst
+    ##    <chr>           <dbl>        <dbl>     <dbl>      <dbl>        <dbl>
+    ##  1 M                18.0         10.4     1.10       0.905         25.4
+    ##  2 M                20.6         17.8     0.544      0.734         25.0
+    ##  3 M                19.7         21.2     0.746      0.787         23.6
+    ##  4 M                11.4         20.4     0.496      1.16          14.9
+    ##  5 M                20.3         14.3     0.757      0.781         22.5
+    ##  6 M                12.4         15.7     0.334      0.890         15.5
+    ##  7 M                18.2         20.0     0.447      0.773         22.9
+    ##  8 M                13.7         20.8     0.584      1.38          17.1
+    ##  9 M                13           21.8     0.306      1.00          15.5
+    ## 10 M                12.5         24.0     0.298      1.60          15.1
+    ## # … with 559 more rows, and 1 more variable: texture_worst <dbl>
+
+### Task 2.2
+
+To make our data tidy, we make it “long” so that every column is a
+variable, every row is an observation, and every cell is a single value.
+
+``` r
+data_subset %>% pivot_longer(!diagnosis, names_to=c("Measurement", "Statistic"), names_sep="_", values_to = "Value")
+```
+
+    ## # A tibble: 3,414 × 4
+    ##    diagnosis Measurement Statistic  Value
+    ##    <chr>     <chr>       <chr>      <dbl>
+    ##  1 M         radius      mean      18.0  
+    ##  2 M         texture     mean      10.4  
+    ##  3 M         radius      se         1.10 
+    ##  4 M         texture     se         0.905
+    ##  5 M         radius      worst     25.4  
+    ##  6 M         texture     worst     17.3  
+    ##  7 M         radius      mean      20.6  
+    ##  8 M         texture     mean      17.8  
+    ##  9 M         radius      se         0.544
+    ## 10 M         texture     se         0.734
+    ## # … with 3,404 more rows
+
+### Task 2.3
+
+The most interesting research questions for me are the first one and the
+third one because they complement well themselves, and because in
+theory, providing an answer to these problems would be beneficial for
+cancer predictions. Hence, we pick those for milestone 3. The version of
+the data we pick is as follows, where we perform some operations on the
+dataset for later usage.
+
+For research question 1, we have the area_mean for both diagnosis:
+
+``` r
+area_mean_M = cancer_sample %>% filter(diagnosis == "M") %>% select(area_mean)
+```
+
+``` r
+area_mean_B = cancer_sample %>% filter(diagnosis == "B") %>% select(area_mean)
+```
+
+For research question 2 (we already performed the operations above), we
+have 3 versions of the data we will use.
+
+This is the data with M mapped to 1 and B mapped to 0.
+
+``` r
+head(cancer_sample_numeric)
+```
+
+    ##         ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+    ## 1   842302         1       17.99        10.38         122.80    1001.0
+    ## 2   842517         1       20.57        17.77         132.90    1326.0
+    ## 3 84300903         1       19.69        21.25         130.00    1203.0
+    ## 4 84348301         1       11.42        20.38          77.58     386.1
+    ## 5 84358402         1       20.29        14.34         135.10    1297.0
+    ## 6   843786         1       12.45        15.70          82.57     477.1
+    ##   smoothness_mean compactness_mean concavity_mean concave_points_mean
+    ## 1         0.11840          0.27760         0.3001             0.14710
+    ## 2         0.08474          0.07864         0.0869             0.07017
+    ## 3         0.10960          0.15990         0.1974             0.12790
+    ## 4         0.14250          0.28390         0.2414             0.10520
+    ## 5         0.10030          0.13280         0.1980             0.10430
+    ## 6         0.12780          0.17000         0.1578             0.08089
+    ##   symmetry_mean fractal_dimension_mean radius_se texture_se perimeter_se
+    ## 1        0.2419                0.07871    1.0950     0.9053        8.589
+    ## 2        0.1812                0.05667    0.5435     0.7339        3.398
+    ## 3        0.2069                0.05999    0.7456     0.7869        4.585
+    ## 4        0.2597                0.09744    0.4956     1.1560        3.445
+    ## 5        0.1809                0.05883    0.7572     0.7813        5.438
+    ## 6        0.2087                0.07613    0.3345     0.8902        2.217
+    ##   area_se smoothness_se compactness_se concavity_se concave_points_se
+    ## 1  153.40      0.006399        0.04904      0.05373           0.01587
+    ## 2   74.08      0.005225        0.01308      0.01860           0.01340
+    ## 3   94.03      0.006150        0.04006      0.03832           0.02058
+    ## 4   27.23      0.009110        0.07458      0.05661           0.01867
+    ## 5   94.44      0.011490        0.02461      0.05688           0.01885
+    ## 6   27.19      0.007510        0.03345      0.03672           0.01137
+    ##   symmetry_se fractal_dimension_se radius_worst texture_worst perimeter_worst
+    ## 1     0.03003             0.006193        25.38         17.33          184.60
+    ## 2     0.01389             0.003532        24.99         23.41          158.80
+    ## 3     0.02250             0.004571        23.57         25.53          152.50
+    ## 4     0.05963             0.009208        14.91         26.50           98.87
+    ## 5     0.01756             0.005115        22.54         16.67          152.20
+    ## 6     0.02165             0.005082        15.47         23.75          103.40
+    ##   area_worst smoothness_worst compactness_worst concavity_worst
+    ## 1     2019.0           0.1622            0.6656          0.7119
+    ## 2     1956.0           0.1238            0.1866          0.2416
+    ## 3     1709.0           0.1444            0.4245          0.4504
+    ## 4      567.7           0.2098            0.8663          0.6869
+    ## 5     1575.0           0.1374            0.2050          0.4000
+    ## 6      741.6           0.1791            0.5249          0.5355
+    ##   concave_points_worst symmetry_worst fractal_dimension_worst
+    ## 1               0.2654         0.4601                 0.11890
+    ## 2               0.1860         0.2750                 0.08902
+    ## 3               0.2430         0.3613                 0.08758
+    ## 4               0.2575         0.6638                 0.17300
+    ## 5               0.1625         0.2364                 0.07678
+    ## 6               0.1741         0.3985                 0.12440
+
+This is the correlation matrix of the cancer_sample_numeric data.
+
+``` r
+head(cormatrix_df)
+```
+
+    ## # A tibble: 6 × 33
+    ##   term                ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+    ##   <chr>            <dbl>     <dbl>       <dbl>        <dbl>          <dbl>     <dbl>
+    ## 1 ID             NA         0.0398      0.0746       0.0998         0.0732    0.0969
+    ## 2 diagnosis       0.0398   NA           0.730        0.415          0.743     0.709 
+    ## 3 radius_mean     0.0746    0.730      NA            0.324          0.998     0.987 
+    ## 4 texture_mean    0.0998    0.415       0.324       NA              0.330     0.321 
+    ## 5 perimeter_mean  0.0732    0.743       0.998        0.330         NA         0.987 
+    ## 6 area_mean       0.0969    0.709       0.987        0.321          0.987    NA     
+    ## # … with 26 more variables: smoothness_mean <dbl>, compactness_mean <dbl>,
+    ## #   concavity_mean <dbl>, concave_points_mean <dbl>, symmetry_mean <dbl>,
+    ## #   fractal_dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+    ## #   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
+    ## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
+    ## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
+    ## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, …
+
+This is the categorized version of the cormatrix_df data for the
+diagnosis column.
+
+``` r
+head(category_corr)
+```
+
+    ## # A tibble: 6 × 3
+    ##   variable        corr_with_diagnosis category
+    ##   <chr>                         <dbl> <fct>   
+    ## 1 ID                           0.0398 Low     
+    ## 2 radius_mean                  0.730  High    
+    ## 3 texture_mean                 0.415  Medium  
+    ## 4 perimeter_mean               0.743  High    
+    ## 5 area_mean                    0.709  High    
+    ## 6 smoothness_mean              0.359  Medium

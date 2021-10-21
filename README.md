@@ -18,4 +18,8 @@ After processing and summarizing the data, the remaining research questions were
 1 - How does the area of a cancer affects the diagnosis?
 2 - What is the variable in this dataset that is the best indicator of a malignant cancer?
 
-In the last part of this data analysis project, we hope to answer these questions using the processed data from part 2.
+In the last part of this project, we decided to analyze question 2 of the previous part, and we also went more in depth by asking the following question :
+
+If we create two models, one trained with the variables that have “Very High” correlation with the diagnosis, and another with the variables falling under the “other” category, how do these two models compare?
+
+We thus separated the variables in two categories, and used multivariate linear models to fit the data. It turns out that both models predicted poorly, since they both had bad R-squared coefficients. This result showed us that most likely, the main problem was our model, and not so much the variables used in our model. Using a non-linear model would have probably yielded better results.

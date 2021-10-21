@@ -1,3 +1,2 @@
-This folder contains the source code for milestone 2 in .Rmd format along with t
-the knitted document in .md format.
-~                                  
+This folder contains the source code for milestone 2 in .Rmd format along with the knitted document in .md format. The folder Mini-data-analysis-m2_files/figure-gfm is used to render the .md files, and was generated from knit.  
+                                 

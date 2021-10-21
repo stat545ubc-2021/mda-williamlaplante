@@ -1,0 +1,41 @@
+---
+title: "Mini-data-analysis-m3"
+author: "William Laplante"
+date: "20/10/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Setup
+
+```{r}
+library(datateachr)
+library(plyr)
+library(tidyverse)
+library(DiscriMiner)
+library(corrr)
+library(forcats)
+```
+
+In milestone 2, we chose two research questions:
+
+1) How does the area of a cancer affects the diagnosis?
+
+2) What is the variable in this dataset that is the best indicator of a malignant cancer?
+
+
+## Exercise 1 : Special Data Types
+
+
+```{r}
+cancer_sample_numeric <- cancer_sample %>% replace(cancer_sample=="M","1") %>% replace(cancer_sample=="B","0") %>% transform(diagnosis=as.numeric(diagnosis))
+cancer_sample_cormatrix = cor(cancer_sample_numeric)
+
+cormatrix_df <- as_cordf(cancer_sample_cormatrix)
+cormatrix_df
+```
+

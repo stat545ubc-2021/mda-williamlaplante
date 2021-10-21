@@ -46,31 +46,46 @@ In milestone 2, we chose two research questions:
 
 ## Exercise 1 : Special Data Types
 
+#### Task 1
+
+Here, we take the correlation matrix computed in the previous milestone,
+and we divide into categories the correlation values for the diagnosis
+column. We then reorder categories using fct_infreq() and plot the bar
+graph with this new reordering. This is helpful to visualize which
+category is dominant in our data and which category is the least
+present. Clearly, we see that the category that is the least present is
+“very high”, meaning most of our variables don’t have a strong
+correlation with the diagnosis. Also the correlation category that is
+most present is “medium”.
+
 ``` r
+#we compute the correlation matrix for the cancer_sample dataset. 
 cancer_sample_numeric <- cancer_sample %>% replace(cancer_sample=="M","1") %>% replace(cancer_sample=="B","0") %>% transform(diagnosis=as.numeric(diagnosis))
 cancer_sample_cormatrix = cor(cancer_sample_numeric)
 
+#we store as a dataframe the correlation matrix
 cormatrix_df <- as_cordf(cancer_sample_cormatrix)
-cormatrix_df
+
+#we break the correlation values into categories for the diagnosis column.
+category_corr <- cormatrix_df %>% mutate(category=cut(diagnosis, breaks=c(-Inf, 0.2, 0.4, 0.6, 0.75, Inf), labels=c("Very Low", "Low", "Medium", "High", "Very High"))) %>% select(term, diagnosis, category) %>% filter(!is.na(diagnosis)) %>% rename(variable=term, corr_with_diagnosis=diagnosis)
+
+#now we plot the bar graph for the correlation categories in order using the forcats package.
+ggplot(category_corr, aes(x = fct_infreq(category))) + geom_bar() + coord_flip()
 ```
 
-    ## # A tibble: 32 × 33
-    ##    term           ID diagnosis radius_mean texture_mean perimeter_mean area_mean
-    ##    <chr>       <dbl>     <dbl>       <dbl>        <dbl>          <dbl>     <dbl>
-    ##  1 ID       NA          0.0398      0.0746       0.0998         0.0732    0.0969
-    ##  2 diagnos…  3.98e-2   NA           0.730        0.415          0.743     0.709 
-    ##  3 radius_…  7.46e-2    0.730      NA            0.324          0.998     0.987 
-    ##  4 texture…  9.98e-2    0.415       0.324       NA              0.330     0.321 
-    ##  5 perimet…  7.32e-2    0.743       0.998        0.330         NA         0.987 
-    ##  6 area_me…  9.69e-2    0.709       0.987        0.321          0.987    NA     
-    ##  7 smoothn… -1.30e-2    0.359       0.171       -0.0234         0.207     0.177 
-    ##  8 compact…  9.57e-5    0.597       0.506        0.237          0.557     0.499 
-    ##  9 concavi…  5.01e-2    0.696       0.677        0.302          0.716     0.686 
-    ## 10 concave…  4.42e-2    0.777       0.823        0.293          0.851     0.823 
-    ## # … with 22 more rows, and 26 more variables: smoothness_mean <dbl>,
-    ## #   compactness_mean <dbl>, concavity_mean <dbl>, concave_points_mean <dbl>,
-    ## #   symmetry_mean <dbl>, fractal_dimension_mean <dbl>, radius_se <dbl>,
-    ## #   texture_se <dbl>, perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
-    ## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
-    ## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
-    ## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, …
+![](Mini-data-analysis-m3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+#### Task 2
+
+We now regroup our factor levels into two categories ; one will contain
+the variables with a “very high” correlation with the diagnosis and the
+other category will be labeled “other” and contain the remaining
+variables that won’t be used for research purposes. This is useful to
+show how many variables will be discarded vs how many will be kept for
+future analyses.
+
+``` r
+ggplot(category_corr, aes(x = fct_lump(category, -1))) + geom_bar()
+```
+
+![](Mini-data-analysis-m3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->

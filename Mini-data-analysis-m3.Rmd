@@ -19,6 +19,7 @@ library(tidyverse)
 library(DiscriMiner)
 library(corrr)
 library(forcats)
+library(broom)
 ```
 
 In milestone 2, we chose two research questions:
@@ -68,7 +69,49 @@ Variable of Interest : Accuracy of model (based on the diagnosis variable)
 
 #### 2.1
 
+Now, we extract the variables from the "very high" and "other" categories :
+```{r}
+Other_df <- category_corr %>% filter(category != "Very High") 
 
+Very_High_df <- category_corr %>% filter(category=="Very High")
+```
+
+We then make two dataframes containing the data for these two variables. We also convert the column diagnosis to numerical by mapping "M" to 1 and "B" to 0.
+```{r}
+X_other <- cancer_sample %>% replace(cancer_sample=="M", "1") %>% replace(cancer_sample=="B", "1") %>% transform(diagnosis=as.numeric(diagnosis)) %>% select(Other_df$variable, diagnosis) %>% select(-ID)    
+
+X_very_high <- cancer_sample %>% replace(cancer_sample=="M", "1") %>% replace(cancer_sample=="B", "1") %>% transform(diagnosis=as.numeric(diagnosis)) %>% select(Very_High_df$variable, diagnosis) 
+```
+
+Finally, we use tidyverse's lm() function to perform multivariate linear regression using both datasets as inputs (data with "very high" correlation and "other" correlation). Both models output a value between 0 and 1, which can be interpreted as the likelihood of a cancer being malignant.
+```{r}
+model_other = lm(diagnosis~.,X_other)
+model_very_high = lm(diagnosis~., X_very_high)
+```
 
 #### 2.2
+
+We now look at the standard error, statistic, and p value of our variables in both models. Then, we assess the accuracy of our models by looking at the adjusted R-squared.
+```{r}
+tidy(model_other)
+```
+
+```{r}
+tidy(model_very_high)
+```
+
+```{r}
+summary(model_other)$adj.r.squared
+```
+```{r}
+summary(model_very_high)$adj.r.squared
+```
+
+These adjusted R squared values demonstrate that our model aren't so good, and that we should probably look into non-linear models for this kind of problem.
+
+
+## Exercise 3 : Reading and writing data
+
+
+#### 3.1
 

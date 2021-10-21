@@ -57,3 +57,18 @@ ggplot(category_corr, aes(x = fct_lump(category, -1))) + geom_bar()
 ```
 
 
+## Exercise 2 : Modelling
+
+#### 2.0
+We now choose our final research question and define the variable of interest. Note that here, we change a bit the initial research question, since the original question can already be answered through our previous analysis. 
+
+Research question : If we create two models, one trained with the variables that have "Very High" correlation with the diagnosis, and another with the variables falling under the "other" category, how do these two models compare? 
+
+Variable of Interest : Accuracy of model (based on the diagnosis variable)
+
+#### 2.1
+
+
+
+#### 2.2
+

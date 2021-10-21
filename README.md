@@ -25,4 +25,4 @@ If we create two models, one trained with the variables that have â€œVery Highâ€
 We thus separated the variables in two categories, and used multivariate linear models to fit the data. It turns out that both models predicted poorly, since they both had bad R-squared coefficients. This result showed us that most likely, the main problem was our model, and not so much the variables used in our model. Using a non-linear model would have probably yielded better results.
 
 
-The directory structure is pretty straightforward ; md1, md2 and md3 contain the contents of each milestones, and the output folder contains the models generated in milestone 3 along with a summary table obtained from milestone 2.
+The directory structure of this project is pretty straightforward ; md1, md2 and md3 contain the contents of each milestones, and the output folder contains the models generated in milestone 3 along with a summary table obtained from milestone 2.

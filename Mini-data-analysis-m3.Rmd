@@ -20,6 +20,7 @@ library(DiscriMiner)
 library(corrr)
 library(forcats)
 library(broom)
+library(here)
 ```
 
 In milestone 2, we chose two research questions:
@@ -115,3 +116,34 @@ These adjusted R squared values demonstrate that our model aren't so good, and t
 
 #### 3.1
 
+We take a summary table from milestone 2, and write it as a csv file in the output folder. To do so, we use the here() function.
+```{r}
+category_corr #this is the summary table from milestone 2
+```
+```{r}
+write.csv(category_corr, here("output", "category_corr.csv")) #we write to the output folder the category_corr dataframe in a csv format.
+```
+
+Robustness : This code should work even if we move our mini data analysis folder in some other location on my computer, since the here() function will always make it so we have access to the current path where the project folder is located.
+
+Reproducibility : Deleting the csv file and knitting this Rmd file remakes the csv file in the output folder.
+
+#### 3.2
+
+We now save our two models in R binary files in the output folder. We use the saveRDS() function to save our file, and we use the here() function for the robustness and reproducibility criterias explained above.
+
+```{r}
+saveRDS(model_other, here("output", "model_other.rds"))
+saveRDS(model_very_high, here("output", "model_very_high.rds"))
+```
+
+We check that we can load our models properly and that everything works fine :
+```{r}
+tidy(readRDS(here("output", "model_very_high.rds")))
+```
+
+```{r}
+tidy(readRDS(here("output", "model_other.rds")))
+```
+
+We see that we get the same models as before. Therefore, we can successfully retrieve our models if needed using the readRDS() function.

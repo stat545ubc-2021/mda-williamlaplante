@@ -36,7 +36,17 @@ library(DiscriMiner)
 library(corrr)
 library(forcats)
 library(broom)
+library(here)
 ```
+
+    ## here() starts at /Users/william/Documents/UBC/STAT 545A/Mini Data Analysis/mda-williamlaplante
+
+    ## 
+    ## Attaching package: 'here'
+
+    ## The following object is masked from 'package:plyr':
+    ## 
+    ##     here
 
 In milestone 2, we chose two research questions:
 
@@ -207,3 +217,91 @@ kind of problem.
 ## Exercise 3 : Reading and writing data
 
 #### 3.1
+
+We take a summary table from milestone 2, and write it as a csv file in
+the output folder. To do so, we use the here() function.
+
+``` r
+category_corr #this is the summary table from milestone 2
+```
+
+    ## # A tibble: 31 × 3
+    ##    variable            corr_with_diagnosis category 
+    ##    <chr>                             <dbl> <fct>    
+    ##  1 ID                               0.0398 Very Low 
+    ##  2 radius_mean                      0.730  High     
+    ##  3 texture_mean                     0.415  Medium   
+    ##  4 perimeter_mean                   0.743  High     
+    ##  5 area_mean                        0.709  High     
+    ##  6 smoothness_mean                  0.359  Low      
+    ##  7 compactness_mean                 0.597  Medium   
+    ##  8 concavity_mean                   0.696  High     
+    ##  9 concave_points_mean              0.777  Very High
+    ## 10 symmetry_mean                    0.330  Low      
+    ## # … with 21 more rows
+
+``` r
+write.csv(category_corr, here("output", "category_corr.csv")) #we write to the output folder the category_corr dataframe in a csv format.
+```
+
+Robustness : This code should work even if we move our mini data
+analysis folder in some other location on my computer, since the here()
+function will always make it so we have access to the current path where
+the project folder is located.
+
+Reproducibility : Deleting the csv file and knitting this Rmd file
+remakes the csv file in the output folder.
+
+#### 3.2
+
+We now save our two models in R binary files in the output folder. We
+use the saveRDS() function to save our file, and we use the here()
+function for the robustness and reproducibility criterias explained
+above.
+
+``` r
+saveRDS(model_other, here("output", "model_other.rds"))
+saveRDS(model_very_high, here("output", "model_very_high.rds"))
+```
+
+We check that we can load our models properly and that everything works
+fine :
+
+``` r
+tidy(readRDS(here("output", "model_very_high.rds")))
+```
+
+    ## Warning in summary.lm(x): essentially perfect fit: summary may be unreliable
+
+    ## # A tibble: 5 × 5
+    ##   term                  estimate std.error statistic  p.value
+    ##   <chr>                    <dbl>     <dbl>     <dbl>    <dbl>
+    ## 1 (Intercept)           1   e+ 0  4.18e-17  2.39e+16 0       
+    ## 2 concave_points_mean  -2.20e-16  6.55e-16 -3.36e- 1 0.737   
+    ## 3 radius_worst          6.54e-17  1.84e-17  3.55e+ 0 0.000421
+    ## 4 perimeter_worst      -1.02e-17  2.87e-18 -3.54e+ 0 0.000439
+    ## 5 concave_points_worst  2.48e-16  3.49e-16  7.12e- 1 0.477
+
+``` r
+tidy(readRDS(here("output", "model_other.rds")))
+```
+
+    ## Warning in summary.lm(x): essentially perfect fit: summary may be unreliable
+
+    ## # A tibble: 27 × 5
+    ##    term                    estimate std.error statistic    p.value
+    ##    <chr>                      <dbl>     <dbl>     <dbl>      <dbl>
+    ##  1 (Intercept)             1   e+ 0  3.75e-16  2.67e+15 0         
+    ##  2 radius_mean            -4.45e-16  1.35e-16 -3.29e+ 0 0.00108   
+    ##  3 texture_mean            5.43e-18  6.98e-18  7.78e- 1 0.437     
+    ##  4 perimeter_mean          5.51e-17  2.09e-17  2.64e+ 0 0.00854   
+    ##  5 area_mean               1.44e-18  3.03e-19  4.76e+ 0 0.00000245
+    ##  6 smoothness_mean         2.84e-15  1.69e-15  1.68e+ 0 0.0936    
+    ##  7 compactness_mean       -2.40e-15  1.18e-15 -2.04e+ 0 0.0421    
+    ##  8 concavity_mean         -1.70e-15  6.48e-16 -2.62e+ 0 0.00913   
+    ##  9 symmetry_mean           8.46e-16  6.52e-16  1.30e+ 0 0.195     
+    ## 10 fractal_dimension_mean -4.01e-15  4.96e-15 -8.08e- 1 0.419     
+    ## # … with 17 more rows
+
+We see that we get the same models as before. Therefore, we can
+successfully retrieve our models if needed using the readRDS() function.
